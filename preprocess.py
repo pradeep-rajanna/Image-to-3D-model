@@ -1,10 +1,36 @@
 #!/usr/bin/env python3
 
+import zipfile
 import binvox_rw
 import numpy as np
 from pathlib import Path
 
 def preprocess():
+    # TODO
+    # add checks to verify file structure and uncomment the following lines
+    #
+    # Required file structure:
+    #
+    # models 
+    # ├── models-binvox-solid
+    # │   ├── models-binvox-solid (to be deleted)
+    # │   └── data
+    # └── model-screenshots
+    #     ├── screenshots (to be deleted)
+    #     ├── view0
+    #     │   └── data
+    #     ├── view1
+    #     │   └── data
+    #     ├── view2
+    #     │   └──data
+    #     └── view3
+    #         └── data
+    #
+    # with zipfile.ZipFile('models/models-binvox-solid.zip','r') as zip_ref:
+    #     zip_ref.extractall('models/models-binvox-solid')
+    # with zipfile.ZipFile('models/models-screenshots.zip','r') as zip_ref:
+    #     zip_ref.extractall('models/model-screenshots')
+
     imgs = Path("models/models-screenshots/screenshots")
     voxels = Path("models/models-binvox-solid/data")
     fimgs = [f for f in imgs.iterdir() if f.is_dir()]
