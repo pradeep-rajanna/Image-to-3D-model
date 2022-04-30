@@ -2,3 +2,5 @@
 models/
 __pycache__/
 *.zip
+*.ipynb
+!Mini Discovery.ipynb
