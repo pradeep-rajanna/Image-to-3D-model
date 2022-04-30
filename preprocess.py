@@ -4,7 +4,7 @@ import zipfile
 import binvox_rw
 import numpy as np
 from pathlib import Path
-
+from shutil import rmtree
 def preprocess():
     # TODO
     # add checks to verify file structure and uncomment the following lines
@@ -27,12 +27,12 @@ def preprocess():
     #         └── data
     #
     # with zipfile.ZipFile('models/models-binvox-solid.zip','r') as zip_ref:
-    #     zip_ref.extractall('models/models-binvox-solid')
-    # with zipfile.ZipFile('models/models-screenshots.zip','r') as zip_ref:
-    #     zip_ref.extractall('models/model-screenshots')
+    #      zip_ref.extractall('models/models-binvox-solid')
+    #  with zipfile.ZipFile('models/models-screenshots.zip','r') as zip_ref:
+    #      zip_ref.extractall('models/model-screenshots')
 
-    imgs = Path("models/models-screenshots/screenshots")
-    voxels = Path("models/models-binvox-solid/data")
+    imgs = Path("models/model-screenshots/screenshots")
+    voxels = Path("models/models-binvox-solid")
     fimgs = [f for f in imgs.iterdir() if f.is_dir()]
     fvoxels = [f for f in voxels.iterdir() if f.is_file()]
     fimgs_stem = [f.stem for f in imgs.iterdir() if f.is_dir()]
@@ -62,15 +62,15 @@ def preprocess():
 
         for fvoxel in fvoxels:
             if fvoxel.stem in remove:
-                fvoxel.unlink()
+                fvoxel.rename(Path(f"models/models-binvox-solid/{fvoxel.name}"))
         for fimg in fimgs:
-            if fimg.stem in remove.stem:
-                fimg.unlink()
+            if fimg.stem in remove:
+                rmtree(fimg)
 
     # To create 4 new folders, one for each view
     for ii in range(4):
-        Path(f"models/models-screenshots/view{ii}").mkdir(exist_ok=True)
-        Path(f"models/models-screenshots/view{ii}/data").mkdir(exist_ok=True)
+        Path(f"models/model-screenshots/view{ii}").mkdir(exist_ok=True)
+        Path(f"models/model-screenshots/view{ii}/data").mkdir(exist_ok=True)
 
     # To seperate each view of a model into it's corresponding image
     fimgs = [f for f in imgs.iterdir() if f.is_dir()]
