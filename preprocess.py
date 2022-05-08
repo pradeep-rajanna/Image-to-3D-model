@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from itertools import count
 import zipfile
 import binvox_rw
 import numpy as np
@@ -28,8 +29,8 @@ def preprocess():
     #         └── data
     #
 
-    imgs = Path("models/models-screenshots/screenshots")
-    voxels = Path("models/models-binvox-solid/models-binvox-solid")
+    imgs = Path("model/models-screenshots/screenshots")
+    voxels = Path("model/models-binvox-solid/models-binvox-solid")
     
     if not (imgs.parent.exists() and voxels.parent.exists()):
         pass   
@@ -44,11 +45,11 @@ def preprocess():
     fvoxels = [f for f in voxels.iterdir() if f.is_file()]
     fimgs_stem = [f.stem for f in imgs.iterdir() if f.is_dir()]
     fvoxels_stem = [f.stem for f in voxels.iterdir() if f.is_file()]
-    g = [0, 1, 6, 7]
+    g = [0, 1, 6, 7, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13]
     diff = set(set(fvoxels_stem) - set(fimgs_stem))
 
     #To remove the files which do not have corresponding images or are unreadable or have zero volume
-    if not len(fvoxels) == 11694:
+    if not len(fvoxels) == 5:
         i = -1
         remove = []
         while i < len(fvoxels)-1:
@@ -64,31 +65,32 @@ def preprocess():
             except:
                 remove.append(fvoxels[i].stem)
         
-        Path(f"models/models-binvox-solid/data").mkdir(exist_ok=True)
-
-        for fvoxel in fvoxels:
-            if not fvoxel.stem in remove:
-                fvoxel.rename(Path(f"models/models-binvox-solid/data/{fvoxel.name}"))
+        Path(f"model/models-binvox-solid/data").mkdir(exist_ok=True)
+        
+        for i, fvoxel in enumerate(fvoxels):
+            if not fvoxel.stem in remove: 
+                fvoxel.rename(Path(f"model/models-binvox-solid/data"+"//"+ str(i)+".binvox"))
         
         for fimg in fimgs:
             if fimg.stem in remove:
                 rmtree(fimg)
 
     # To create 4 new folders, one for each view
-    for ii in range(4):
-        Path(f"models/models-screenshots/view{ii}").mkdir(exist_ok=True)
-        Path(f"models/models-screenshots/view{ii}/data").mkdir(exist_ok=True)
+    for ii in range(14):
+        Path(f"model/models-screenshots/view{ii}").mkdir(exist_ok=True)
+        Path(f"model/models-screenshots/view{ii}/data").mkdir(exist_ok=True)
 
     # To seperate each view of a model into it's corresponding image
     fimgs = [f for f in imgs.iterdir() if f.is_dir()]
     for j in range(len(fimgs)):
         img_files = [f for f in fimgs[j].iterdir() if f.is_file]
+        print(len(img_files))
         if len(img_files)==15:
-            for k in range(4):
-                img_files[g[k]].rename(Path(f"models/models-screenshots/view{k}/data/{img_files[g[k]].name}"))
+            for k in range(14):
+                img_files[g[k]].rename(Path(f"model/models-screenshots/view{k}/data/{img_files[g[k]].name}"))
     
-    rmtree(Path("models/models-screenshots/screenshots"))
-    rmtree(Path("models/models-binvox-solid/models-binvox-solid"))
+    rmtree(Path("model/models-screenshots/screenshots"))
+    rmtree(Path("model/models-binvox-solid/models-binvox-solid"))
 
 if __name__ == "__main__":
     preprocess()
